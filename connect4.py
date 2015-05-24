@@ -6,8 +6,9 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 processor_name = MPI.Get_processor_name()
 
-DEPTH = 7
-WORKER_DEPTH = 5
+DEPTH = 8
+MASTER_DEPTH = 3
+WORKER_DEPTH = DEPTH - MASTER_DEPTH
 
 if __name__ == '__main__':
     print 'hello %d on %s' % (rank, processor_name)

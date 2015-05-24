@@ -2,6 +2,7 @@ from mpi4py import MPI
 from board import Board
 from board import BoardTag
 from messageType import MessageType
+from log import Log
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -12,35 +13,37 @@ class Worker():
     def __init__(self, worker_depth):
         self._board = Board()       # This will be overwritten when BOARD_DATA is received
         self._worker_depth = worker_depth
-        print 'Worker %d: init' % rank
+        self._log = Log('Worker %d' % rank)
+        self._log.debug('init')
 
     def work(self):
-        print 'Worker %d: work' % rank
+        self._log.debug('work')
 
         while True:
             message = comm.recv(source=0)
 
             if message['type'] == MessageType.BOARD_DATA:
-                print 'Worker %d: receives BOARD_DATA' % rank
+                self._log.debug('receives BOARD_DATA')
                 self._board = message['board']
-            # TODO add QUIT message
+            elif message['type' == MessageType.STOP]:
+                self._log.debug('receives STOP')
+                break
 
             # Start requesting tasks
-            while self._request_task():
-                pass
+            while self._request_task(): pass
 
     def _request_task(self):
-        print 'Worker %d: sends TASK_REQUEST' % rank
+        self._log.debug('sends TASK_REQUEST')
         message = {'type': MessageType.TASK_REQUEST}
         comm.send(message, dest=0)
 
         message = comm.recv(source=0)
         if message['type'] == MessageType.WAIT:
-            print 'Worker %d: receives WAIT' % rank
+            self._log.debug('receives WAIT')
             return False
 
         task = message['task']
-        print 'Worker %d: receives TASK_DATA' % rank, task
+        self._log.debug('receives TASK_DATA {0}'.format(task))
 
         # CPU first move
         if self._play_cpu(task): return True
@@ -50,10 +53,11 @@ class Worker():
 
         # Evaluate in depth
         result = self._evaluate(BoardTag.CPU, task[1], self._worker_depth)
+
         self._board.reverse_move(task[1])
         self._board.reverse_move(task[0])
 
-        print 'Worker %d: sends TASK_RESULT' % rank
+        self._log.debug('sends TASK_RESULT')
         message = {'type': MessageType.TASK_RESULT, 'task': task, 'result': result}
         comm.send(message, dest=0)
 
@@ -79,6 +83,7 @@ class Worker():
             return True
 
     def _evaluate(self, current_player, last_played_column, depth):
+        # self._p(current_player, last_played_column, depth)
         end_check = self._board.check_if_finished(last_played_column)
         if end_check[0]:
             return 1 if end_check[1] == BoardTag.CPU else -1
@@ -90,7 +95,7 @@ class Worker():
         all_child_wins = True
         for column in xrange(7):
             self._board.play_move(current_player, column)
-            next_player = BoardTag.HUMAN if current_player == BoardTag.CPU else BoardTag.HUMAN
+            next_player = BoardTag.HUMAN if current_player == BoardTag.CPU else BoardTag.CPU
             result = self._evaluate(next_player, column, depth-1)
             self._board.reverse_move(column)
 
@@ -101,3 +106,18 @@ class Worker():
             total_result += result
 
         return 1 if all_child_wins else -1 if all_child_loses else total_result / 7
+
+        # if all_child_wins:
+            # print 'evaluate (%s, %d, %d)' % (current_player, last_played_column, depth)
+            # print 'VRATI 1'
+            # return 1
+        # if all_child_loses:
+            # print 'evaluate (%s, %d, %d)' % (current_player, last_played_column, depth)
+            # print 'VRATI -1'
+            # return -1
+
+        # return total_result / 7
+
+    def _p(self, player, column, depth):
+        offset = ' ' * (self._worker_depth - depth)
+        print offset, player, column, depth

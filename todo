@@ -1,0 +1,3 @@
+
+    - unosenje dubine pretrage preko argumenata
+    - dodaj provjere za kraj igre i slanje obavijesti workerima
