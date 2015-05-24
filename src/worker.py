@@ -1,8 +1,10 @@
 from mpi4py import MPI
+
 from board import Board
 from board import BoardTag
 from messageType import MessageType
 from log import Log
+
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()

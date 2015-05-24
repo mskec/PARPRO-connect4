@@ -1,6 +1,8 @@
 from mpi4py import MPI
+
 from master import Master
 from worker import Worker
+
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()

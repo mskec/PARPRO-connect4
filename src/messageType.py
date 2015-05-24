@@ -1,3 +1,5 @@
+
+
 class MessageType():
     BOARD_DATA, TASK_REQUEST, TASK_DATA, TASK_RESULT, WAIT, STOP = range(6)
 

@@ -1,3 +1,5 @@
+
+
 class BoardTag:
     EMPTY, CPU, HUMAN = ['_', 'c', 'h']
 

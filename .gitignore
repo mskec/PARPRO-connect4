@@ -1,2 +1,7 @@
 .idea
-help
+
+dist.zip
+
+# Python
+__pycache__/
+*.py[cod]

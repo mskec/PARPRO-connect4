@@ -1,4 +1,5 @@
 
+
 class Log:
 
     DEBUG = False

@@ -24,7 +24,8 @@ class TaskPool():
         quality = [0] * 7
         for task_key, task_value in self._tasks.iteritems():
             quality[task_key[0]] += task_value
-        return map(lambda x: x / 7.0, quality)
+        # return map(lambda x: x / 7.0, quality)
+        return quality
 
 if __name__ == '__main__':
     tasks = TaskPool()

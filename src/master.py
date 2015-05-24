@@ -1,10 +1,12 @@
+import time
 from mpi4py import MPI
+
 from board import Board
 from board import BoardTag
 from taskPool import TaskPool
 from messageType import MessageType
 from log import Log
-import time
+
 
 comm = MPI.COMM_WORLD
 comm_size = comm.Get_size()
