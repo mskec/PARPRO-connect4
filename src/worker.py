@@ -21,13 +21,14 @@ class Worker():
     def work(self):
         self._log.debug('work')
 
+        # Move cycle
         while True:
             message = comm.recv(source=0)
 
             if message['type'] == MessageType.BOARD_DATA:
                 self._log.debug('receives BOARD_DATA')
                 self._board = message['board']
-            elif message['type' == MessageType.STOP]:
+            elif message['type'] == MessageType.STOP:
                 self._log.debug('receives STOP')
                 break
 
@@ -109,17 +110,6 @@ class Worker():
 
         return 1 if all_child_wins else -1 if all_child_loses else total_result / 7
 
-        # if all_child_wins:
-            # print 'evaluate (%s, %d, %d)' % (current_player, last_played_column, depth)
-            # print 'VRATI 1'
-            # return 1
-        # if all_child_loses:
-            # print 'evaluate (%s, %d, %d)' % (current_player, last_played_column, depth)
-            # print 'VRATI -1'
-            # return -1
-
-        # return total_result / 7
-
-    def _p(self, player, column, depth):
-        offset = ' ' * (self._worker_depth - depth)
-        print offset, player, column, depth
+    # def _p(self, player, column, depth):
+    #     offset = ' ' * (self._worker_depth - depth)
+    #     print offset, player, column, depth

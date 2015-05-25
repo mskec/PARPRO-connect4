@@ -71,7 +71,7 @@ class Board():
         if Board._check4_in_list(self._get_row_tags(last_played_row, last_played_column), last_player_tag) is True or \
                 Board._check4_in_list(self._get_column_tags(last_played_row, last_played_column), last_player_tag) is True or \
                 Board._check4_in_list(self._get_diagonal_tags(last_played_row, last_played_column), last_player_tag) is True or \
-                Board._check4_in_list(self._get_diagonal_tags(last_played_row, last_played_column, False), last_player_tag) is True:
+                Board._check4_in_list(self._get_diagonal_tags(last_played_row, last_played_column, True), last_player_tag) is True:
             return True, last_player_tag
         else:
             return False, BoardTag.EMPTY
@@ -94,14 +94,14 @@ class Board():
     """ Helper methods for board checking """
     def _get_row_tags(self, row, column):
         board_tags = []
-        for i in xrange(column - 3, column + 3):
+        for i in xrange(column - 3, column + 4):
             if self._check_column_access(i, False):
                 board_tags.append(self._board[row][i])
         return board_tags
 
     def _get_column_tags(self, row, column):
         board_tags = []
-        for i in xrange(row - 3, row + 3):
+        for i in xrange(row - 3, row + 4):
             if self._check_row_access(i, False):
                 board_tags.append(self._board[i][column])
         return board_tags
@@ -141,32 +141,3 @@ class Board():
             else:
                 count = 0
         return count == 4
-
-
-""" Board testing """
-if __name__ == '__main__':
-    board = Board()
-
-    board.play_move(BoardTag.CPU, 0)
-    board.play_move(BoardTag.HUMAN, 5)
-    board.play_move(BoardTag.CPU, 1)
-    board.play_move(BoardTag.HUMAN, 3)
-    board.play_move(BoardTag.CPU, 1)
-    board.play_move(BoardTag.HUMAN, 2)
-    board.play_move(BoardTag.CPU, 2)
-    board.play_move(BoardTag.HUMAN, 0)
-    board.play_move(BoardTag.CPU, 1)
-    board.play_move(BoardTag.HUMAN, 0)
-    board.play_move(BoardTag.CPU, 1)
-
-    board.print_board()
-    print 'Last played tag (col 5):', board._board[board._get_top_row(5)][5]
-    print 'Last played tag (col 1):', board._board[board._get_top_row(1)][1]
-    print 'Row (0, 2):\t', board._get_row_tags(0, 2)
-    print 'Col (0, 2):\t', board._get_column_tags(0, 2)
-    print 'Left diagonal (1, 1):\t', board._get_diagonal_tags(1, 1)
-    print 'Right diagonal (1, 1):\t', board._get_diagonal_tags(1, 1, True)
-    print 'Test 4 in a row:', Board._check4_in_list([BoardTag.HUMAN, BoardTag.HUMAN, BoardTag.HUMAN, BoardTag.HUMAN, BoardTag.EMPTY], BoardTag.HUMAN)
-    print 'Test 4 in a row:', Board._check4_in_list([BoardTag.HUMAN, BoardTag.HUMAN, BoardTag.HUMAN, BoardTag.HUMAN, BoardTag.EMPTY], BoardTag.CPU)
-    print 'Check winner:', board.check_if_finished(1)
-    print 'Check winner:', board.check_if_finished(3)

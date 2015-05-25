@@ -3,6 +3,7 @@ from mpi4py import MPI
 
 from board import Board
 from board import BoardTag
+# from graphDisplay import GraphDisplay
 from taskPool import TaskPool
 from messageType import MessageType
 from log import Log
@@ -17,12 +18,14 @@ class Master():
     def __init__(self):
         self._board = Board()
         self._taskPool = TaskPool()
+        # self._graphDisplay = GraphDisplay()
         self._log = Log('Master')
         self._log.debug('init')
 
     def work(self):
         self._log.debug('work')
 
+        # Move cycle
         while True:
             self._taskPool = TaskPool()
 
@@ -68,7 +71,7 @@ class Master():
             column_quality = self._taskPool.calculate_quality()
             best_column_move = max(enumerate(column_quality), key=lambda x: x[1])[0]
 
-            print 'Calculation done in:', (time.time() - start_time)
+            print 'Thinking done in:', (time.time() - start_time)
             print
 
             # Print column quality
@@ -77,33 +80,48 @@ class Master():
             print 'Best column move', best_column_move+1
             print
 
+            # self._graphDisplay.update_data(column_quality)
+
             self._board.play_move(BoardTag.CPU, best_column_move)
             self._board.print_board()
             print
 
-            # TODO check if CPU is the winner
+            if self._board.check_if_finished(best_column_move)[0]:
+                self._print_winner(BoardTag.CPU)
+                break
 
-            self._human_turn()
-        # New cycle
+            human_column_move = self._human_turn()
+            if human_column_move == -1: break
+            if self._board.check_if_finished(human_column_move)[0]:
+                self._print_winner(BoardTag.HUMAN)
+                break
+
+        # END cycle
+        self._stop_workers()
+
+    def _stop_workers(self):
+        for x in xrange(1, comm_size):
+            self._log.debug('STOP to %d' % x)
+            comm.send({'type': MessageType.STOP}, dest=x)
 
     def _human_turn(self):
         # Take player move
-        human_input = self._read_human_input()
-        if human_input == 0:
-            print 'Human gave up! CPU WINS!!!'
+        human_input = self._read_human_input()-1
+        if human_input == -1:
+            print 'Human gave up! CPU WINS!'
+            return human_input
 
         # play
-        self._board.play_move(BoardTag.HUMAN, human_input-1)
+        self._board.play_move(BoardTag.HUMAN, human_input)
         self._board.print_board()
         print
 
-        # eval
-        # TODO result = self._check_game_end(player_input)
+        return human_input
 
     @staticmethod
     def _read_human_input():
         while True:
-            print 'Column:',
+            print 'Human move:',
             human_input = raw_input()
             try:
                 human_input = int(human_input)
@@ -112,3 +130,8 @@ class Master():
                 return human_input
             except ValueError:
                 print 'Invalid input! Enter 1-7 for column or 0 for end'
+
+    @staticmethod
+    def _print_winner(player):
+        player_label = 'CPU' if player == BoardTag.CPU else 'Human'
+        print '%s won!' % player_label
