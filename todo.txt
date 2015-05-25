@@ -1,2 +1,4 @@
 # TODO
     - unosenje dubine pretrage preko argumenata
+    - napravi master-a koji ce zavrsiti nakon prvog racunanja
+    - napravi silent output mogucnost koja ce vratiti samo vrijeme racunanja

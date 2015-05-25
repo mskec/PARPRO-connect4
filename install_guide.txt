@@ -1,28 +1,25 @@
 # Installing MPI
 
-apt-get update
-apt-get install python-dev
-apt-get install python-pip
-apt-get install git
+apt-get update &&
+apt-get install -y python-dev &&
+apt-get install -y python-pip &&
+apt-get install -y git &&
 
-apt-get install mpich2
+apt-get install -y mpich2 &&
 pip install mpi4py
 
 # Generating ssh key
-ssh-keygen -t rsa
+ssh-keygen -t rsa -q
 
 # Deploying app
 git clone git@github.com:mskec/PARPRO-connect4.git
 
-
-# Running
+# Running on single node
 mpirun -np 4 python src/connect4.py
-
 
 # Find proc speed
 cat /proc/cpuinfo
 
-
 # Run on multiple nodes
   1. Make sure nodes can connect to each other with ssh (setup ssh keys)
-  2. Create hosts file
+  2. Create hosts file with private IPs of all nodes (including the on that is executing mpi)
