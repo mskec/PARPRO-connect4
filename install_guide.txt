@@ -1,5 +1,6 @@
 # Installing MPI
 
+apt-get update
 apt-get install python-dev
 apt-get install python-pip
 apt-get install git
@@ -11,7 +12,7 @@ pip install mpi4py
 ssh-keygen -t rsa
 
 # Deploying app
-git clone git@github.com:mskec/PARPRO-Connect4.git
+git clone git@github.com:mskec/PARPRO-connect4.git
 
 
 # Running
@@ -20,3 +21,8 @@ mpirun -np 4 python src/connect4.py
 
 # Find proc speed
 cat /proc/cpuinfo
+
+
+# Run on multiple nodes
+  1. Make sure nodes can connect to each other with ssh (setup ssh keys)
+  2. Create hosts file

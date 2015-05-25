@@ -8,8 +8,8 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 processor_name = MPI.Get_processor_name()
 
-DEPTH = 8
-MASTER_DEPTH = 3
+DEPTH = 7
+MASTER_DEPTH = 2
 WORKER_DEPTH = DEPTH - MASTER_DEPTH
 
 if __name__ == '__main__':
