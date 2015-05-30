@@ -1,8 +1,8 @@
 .idea
 
-homework.xlsx
+*.xlsx
+*.docx
 
 # Python
 __pycache__/
 *.py[cod]
-

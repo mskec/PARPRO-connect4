@@ -86,7 +86,6 @@ class Worker():
             return True
 
     def _evaluate(self, current_player, last_played_column, depth):
-        # self._p(current_player, last_played_column, depth)
         end_check = self._board.check_if_finished(last_played_column)
         if end_check[0]:
             return 1 if end_check[1] == BoardTag.CPU else -1
@@ -109,7 +108,3 @@ class Worker():
             total_result += result
 
         return 1 if all_child_wins else -1 if all_child_loses else total_result / 7
-
-    # def _p(self, player, column, depth):
-    #     offset = ' ' * (self._worker_depth - depth)
-    #     print offset, player, column, depth

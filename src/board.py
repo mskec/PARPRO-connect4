@@ -55,7 +55,6 @@ class Board():
         if top_row_idx is None:
             raise AssertionError('Cannot reverse move on column %d'.format(last_played_column))
 
-        # TODO remove row if possible
         self._board[top_row_idx][last_played_column] = BoardTag.EMPTY
 
     def check_if_finished(self, last_played_column):
@@ -131,7 +130,6 @@ class Board():
 
     @staticmethod
     def _check4_in_list(tag_list, player_tag):
-        # TODO use reduce
         count = 0
         for tag in tag_list:
             if count == 4:

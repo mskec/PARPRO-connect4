@@ -17,9 +17,8 @@ git clone git@github.com:mskec/PARPRO-connect4.git
 # Running on single node
 mpirun -np 4 python src/connect4.py
 
-# Find proc speed
-cat /proc/cpuinfo
 
 # Run on multiple nodes
-  1. Make sure nodes can connect to each other with ssh (setup ssh keys)
-  2. Create hosts file with private IPs of all nodes (including the on that is executing mpi)
+  1. Distribute source code to all nodes, make sure path is the same on all nodes
+  2. Make sure nodes can connect to each other with ssh (setup ssh keys)
+  3. Create hosts file with private IPs of all nodes (including the on that is executing mpi)

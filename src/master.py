@@ -3,7 +3,6 @@ from mpi4py import MPI
 
 from board import Board
 from board import BoardTag
-# from graphDisplay import GraphDisplay
 from taskPool import TaskPool
 from messageType import MessageType
 from log import Log
@@ -19,7 +18,6 @@ class Master():
         self._measuring = measuring
         self._board = Board()
         self._taskPool = TaskPool()
-        # self._graphDisplay = GraphDisplay()
         self._log = Log('Master')
         self._log.debug('init')
 
@@ -53,8 +51,7 @@ class Master():
                 self._print('Column %d quality: %f' % (idx+1, quality))
             self._print('Best column move %d\n' % (best_column_move+1))
 
-            # self._graphDisplay.update_data(column_quality)
-
+            # In case we are just measuring 1st move by CPU
             if self._measuring:
                 self._stop_workers()
                 return False
